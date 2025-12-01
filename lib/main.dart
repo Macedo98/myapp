@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './botoes.dart';
+import 'package:myapp/botoes.dart';
 
 void main() {
   runApp(const PerguntasApp());
@@ -10,10 +10,7 @@ class PerguntasApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const Home(),
-    );
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Home());
   }
 }
 
@@ -26,9 +23,35 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   final perguntas = [
-    'Qual a sua cor favorita?',
-    'Qual seu animal favorito?',
-    'Qual é o seu time?',
+    {
+      'pergunta': 'Qual a sua cor favorita entre essas 2?',
+      'respostas': [
+        'preto',
+        'branco',
+      ],
+    },
+    {
+      'pergunta': 'Qual seu animal favorito entre esses?',
+      'respostas': ['Gato', 'Cachorro', 'Ornitorrinco'],
+    },
+    {
+      'pergunta': 'Qual é o seu time?',
+      'respostas': [
+        'Palmeiras',
+        'Corinthians',
+        'São Paulo',
+        'Santos',
+      ],
+    },
+    {
+      'pergunta': 'Qual sua materia preferida?',
+      'respostas': [
+        'Portugues',
+        'Matematica',
+        'Química',
+        'Educação Fisica',
+      ]
+    }
   ];
 
   var indicePergunta = 0;
@@ -39,7 +62,6 @@ class HomeState extends State<Home> {
     } else {
       indicePergunta = 0;
     }
-
     setState(() {});
   }
 
@@ -49,20 +71,22 @@ class HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Macedo', style: TextStyle(fontSize: 30)),
         centerTitle: true,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.red,
         toolbarHeight: 80,
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              perguntas[indicePergunta],
-              style: const TextStyle(fontSize: 40),
+              perguntas[indicePergunta]['pergunta'].toString(),
+              style: const TextStyle(fontSize: 25),
             ),
-            Botoes(resp: responder),
-            Botoes(resp: responder),
-            Botoes(resp: responder),
+            const SizedBox(height: 20),
+            ...((perguntas[indicePergunta]['respostas'] as List<String>)
+                .map((textoBotao) => Botoes(resp: responder, txt: textoBotao))
+                .toList()),
           ],
         ),
       ),
