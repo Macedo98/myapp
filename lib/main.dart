@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/botoes.dart';
+import 'package:myapp/pergunta_respostas.dart';
+import './dados.dart';
+import './lista_perguntas.dart';
+// import './resultado.dart';
 
 void main() {
   runApp(const PerguntasApp());
@@ -22,74 +25,51 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  final perguntas = [
-    {
-      'pergunta': 'Qual a sua cor favorita entre essas 2?',
-      'respostas': [
-        'preto',
-        'branco',
-      ],
-    },
-    {
-      'pergunta': 'Qual seu animal favorito entre esses?',
-      'respostas': ['Gato', 'Cachorro', 'Ornitorrinco'],
-    },
-    {
-      'pergunta': 'Qual é o seu time?',
-      'respostas': [
-        'Palmeiras',
-        'Corinthians',
-        'São Paulo',
-        'Santos',
-      ],
-    },
-    {
-      'pergunta': 'Qual sua materia preferida?',
-      'respostas': [
-        'Portugues',
-        'Matematica',
-        'Química',
-        'Educação Fisica',
-      ]
-    }
-  ];
-
+  final List<PerguntaRespostas> dados = perguntasRespostas;
+  List<Map<String, String>> respostas = [];
   var indicePergunta = 0;
 
-  void responder() {
-    if (indicePergunta < perguntas.length - 1) {
+  void responder(String r) {
+    String p = dados[indicePergunta].pergunta;
+    respostas.add({'pergunta': p, 'resposta': r});
+    setState(() {
       indicePergunta++;
-    } else {
+    });
+  }
+
+  void reiniciar() {
+    setState(() {
       indicePergunta = 0;
-    }
-    setState(() {});
+      respostas = [];
+    });
+  }
+
+  bool get temPergunta {
+    return indicePergunta < dados.length;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Macedo', style: TextStyle(fontSize: 30)),
+        title: const Text(
+          'Macedo',
+          style: TextStyle(fontSize: 30),
+        ),
         centerTitle: true,
         backgroundColor: Colors.red,
         toolbarHeight: 80,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              perguntas[indicePergunta]['pergunta'].toString(),
-              style: const TextStyle(fontSize: 25),
-            ),
-            const SizedBox(height: 20),
-            ...((perguntas[indicePergunta]['respostas'] as List<String>)
-                .map((textoBotao) => Botoes(resp: responder, txt: textoBotao))
-                .toList()),
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.all(20),
+          child: temPergunta
+              ? ListaPerguntas(
+                  indicePergunta: indicePergunta,
+                  perguntas: dados,
+                  responder: responder,
+                )
+              : null //Resultado(respostas: respostas, reiniciar: reiniciar),
+          ),
     );
   }
 }
