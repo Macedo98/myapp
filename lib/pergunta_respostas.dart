@@ -1,9 +1,11 @@
 class PerguntaRespostas {
   final String pergunta;
-  final List<String> respostas;
+  final String? imagem;
+  final List<Map<String, dynamic>> respostas;
 
   PerguntaRespostas({
     required this.pergunta,
+    this.imagem,
     required this.respostas,
   });
 }
